@@ -1,34 +1,308 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
-}
+/* KodNest Premium Build System Styles */
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
-}
-
-.App-header {
-    background-color: #0f0f10;
+.kodnest-container {
     min-height: 100vh;
+    background-color: var(--kodnest-bg);
+}
+
+/* Top Bar */
+.kodnest-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    background-color: var(--kodnest-card);
+    border-bottom: 1px solid var(--kodnest-border);
+}
+
+.kodnest-project-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--kodnest-text);
+    letter-spacing: -0.01em;
+}
+
+.kodnest-progress {
+    font-size: 13px;
+    color: var(--kodnest-text);
+    opacity: 0.6;
+}
+
+.kodnest-status-badge {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 4px;
+    border: 1px solid var(--kodnest-border);
+    background-color: var(--kodnest-bg);
+    color: var(--kodnest-text);
+}
+
+/* Context Header */
+.kodnest-context-header {
+    padding: 64px 40px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.kodnest-headline {
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--kodnest-text);
+    margin: 0 0 16px 0;
+    letter-spacing: -0.02em;
+}
+
+.kodnest-subtext {
+    font-size: 18px;
+    color: var(--kodnest-text);
+    opacity: 0.6;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Workspace Layout */
+.kodnest-workspace {
+    display: flex;
+    gap: 24px;
+    padding: 0 40px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.kodnest-primary {
+    flex: 0 0 70%;
+}
+
+.kodnest-secondary {
+    flex: 0 0 calc(30% - 24px);
+}
+
+/* Cards */
+.kodnest-card {
+    background-color: var(--kodnest-card);
+    border: 1px solid var(--kodnest-border);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: border-color 150ms ease-in-out;
+}
+
+.kodnest-card:hover {
+    border-color: var(--kodnest-text);
+}
+
+.kodnest-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--kodnest-text);
+    margin: 0 0 8px 0;
+}
+
+.kodnest-card-description {
+    font-size: 14px;
+    color: var(--kodnest-text);
+    opacity: 0.6;
+    margin: 0 0 24px 0;
+    line-height: 1.6;
+}
+
+/* Buttons */
+.kodnest-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 24px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.kodnest-btn-primary {
+    background-color: var(--kodnest-accent);
+    color: white;
+}
+
+.kodnest-btn-primary:hover {
+    background-color: #6B0000;
+}
+
+.kodnest-btn-secondary {
+    background-color: transparent;
+    color: var(--kodnest-text);
+    border: 1px solid var(--kodnest-border);
+}
+
+.kodnest-btn-secondary:hover {
+    border-color: var(--kodnest-text);
+}
+
+.kodnest-btn-small {
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+/* Inputs */
+.kodnest-input {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 12px 16px;
+    border: 1px solid var(--kodnest-border);
+    border-radius: 4px;
+    background-color: var(--kodnest-card);
+    color: var(--kodnest-text);
+    width: 100%;
+    transition: border-color 150ms ease-in-out;
+}
+
+.kodnest-input:focus {
+    outline: none;
+    border-color: var(--kodnest-accent);
+}
+
+.kodnest-input::placeholder {
+    color: var(--kodnest-text);
+    opacity: 0.4;
+}
+
+/* Code Block */
+.kodnest-code-block {
+    background-color: var(--kodnest-bg);
+    border: 1px solid var(--kodnest-border);
+    border-radius: 4px;
+    padding: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--kodnest-text);
+    overflow-x: auto;
+    margin: 16px 0;
+}
+
+/* Proof Footer */
+.kodnest-proof-footer {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--kodnest-card);
+    border-top: 1px solid var(--kodnest-border);
+    padding: 24px 40px;
+}
+
+.kodnest-proof-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.kodnest-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--kodnest-text);
+}
+
+.kodnest-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--kodnest-border);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+/* Color Swatches */
+.kodnest-color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.kodnest-color-swatch {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    border: 1px solid var(--kodnest-border);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+    gap: 8px;
 }
 
-.App-link {
-    color: #61dafb;
+.kodnest-color-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--kodnest-text);
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
+.kodnest-color-value {
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    opacity: 0.6;
+}
+
+/* Typography Scale */
+.kodnest-type-sample {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--kodnest-border);
+}
+
+.kodnest-type-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--kodnest-text);
+    opacity: 0.5;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Spacing Scale */
+.kodnest-spacing-demo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.kodnest-spacing-box {
+    background-color: var(--kodnest-accent);
+    opacity: 0.2;
+}
+
+.kodnest-spacing-label {
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Courier New', monospace;
+    color: var(--kodnest-text);
+}
+
+/* Component Grid */
+.kodnest-component-grid {
+    display: grid;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .kodnest-workspace {
+        flex-direction: column;
     }
-    to {
-        transform: rotate(360deg);
+    
+    .kodnest-primary,
+    .kodnest-secondary {
+        flex: 1 1 100%;
+    }
+    
+    .kodnest-headline {
+        font-size: 36px;
     }
 }
