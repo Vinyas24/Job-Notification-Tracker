@@ -7,6 +7,7 @@ import Saved from './pages/Saved';
 import Digest from './pages/Digest';
 import Settings from './pages/Settings';
 import Proof from './pages/Proof';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/digest" element={<Digest />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/proof" element={<Proof />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </div>
