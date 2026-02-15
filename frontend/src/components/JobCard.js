@@ -17,12 +17,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { MapPin, Briefcase, Clock, Building2, Banknote, Star } from 'lucide-react';
+import { getScoreColor } from '../utils/scoring';
 
-const JobCard = ({ job, onSave, isSaved }) => {
+const JobCard = ({ job, onSave, isSaved, matchScore }) => {
   return (
-    <Card className="hover:shadow-lg transition-all duration-300 border-border/50 bg-card">
+    <Card className="hover:shadow-lg transition-all duration-300 border-border/50 bg-card relative overflow-hidden group">
+      
+      {/* Match Score Badge */}
+      {typeof matchScore === 'number' && (
+          <div className={`absolute top-0 right-0 px-3 py-1 rounded-bl-lg text-xs font-bold border-l border-b ${getScoreColor(matchScore)}`}>
+              {matchScore}% Match
+          </div>
+      )}
+
       <CardHeader className="space-y-1">
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start mr-16"> {/* Add margin right to avoid overlap with badge */}
           <div className="space-y-1">
             <CardTitle className="text-xl font-semibold line-clamp-1" title={job.title}>
               {job.title}
@@ -32,14 +41,15 @@ const JobCard = ({ job, onSave, isSaved }) => {
               <span className="font-medium">{job.company}</span>
             </div>
           </div>
-          <Badge variant="secondary" className="bg-secondary/50 text-xs whitespace-nowrap">
-            {job.source}
-          </Badge>
+          {/* Badge moved to top right absolute */}
         </div>
       </CardHeader>
       
       <CardContent className="space-y-4">
         <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+          <Badge variant="outline" className="font-normal text-muted-foreground bg-transparent hover:bg-transparent">
+             {job.source}
+          </Badge>
           <div className="flex items-center bg-muted/30 px-2 py-1 rounded">
             <MapPin className="w-3.5 h-3.5 mr-1" />
             {job.location} ({job.mode})
@@ -69,7 +79,14 @@ const JobCard = ({ job, onSave, isSaved }) => {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-serif">{job.title}</DialogTitle>
+              <div className="flex justify-between items-start">
+                   <DialogTitle className="text-2xl font-serif">{job.title}</DialogTitle>
+                   {typeof matchScore === 'number' && (
+                        <Badge variant="outline" className={`ml-2 ${getScoreColor(matchScore)}`}>
+                             {matchScore}% Match
+                        </Badge>
+                    )}
+              </div>
               <DialogDescription className="text-base flex flex-col gap-1 mt-2">
                 <span className="font-medium text-foreground">{job.company}</span>
                 <span className="flex items-center gap-2">

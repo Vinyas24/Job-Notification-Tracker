@@ -89,6 +89,8 @@ const FilterBar = ({ filters, setFilters }) => {
           <SelectContent>
             <SelectItem value="latest">Latest First</SelectItem>
             <SelectItem value="oldest">Oldest First</SelectItem>
+            <SelectItem value="matchScore">Match Score (High to Low)</SelectItem>
+            <SelectItem value="salary">Salary (High to Low)</SelectItem>
           </SelectContent>
         </Select>
       </div>
