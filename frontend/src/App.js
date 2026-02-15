@@ -8,10 +8,12 @@ import Digest from './pages/Digest';
 import Settings from './pages/Settings';
 import Proof from './pages/Proof';
 import NotFound from './pages/NotFound';
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
     <div className="App">
+      <Toaster position="top-center" />
       <BrowserRouter>
         <Navigation />
         <Routes>

@@ -57,9 +57,13 @@ const Settings = () => {
         });
     }
 
+    const [isSaving, setIsSaving] = useState(false);
+
     const handleSave = () => {
+        setIsSaving(true);
         localStorage.setItem('jobTrackerPreferences', JSON.stringify(preferences));
         toast.success("Preferences saved successfully!");
+        setTimeout(() => setIsSaving(false), 2000);
     };
 
   return (
@@ -80,7 +84,6 @@ const Settings = () => {
       <div className="kodnest-workspace" style={{ maxWidth: '800px', margin: '0 auto', padding: '0 40px 64px', flexDirection: 'column' }}>
         <div className="space-y-8 bg-card p-8 rounded-lg border border-border/50 shadow-sm">
             
-            {/* Role Keywords */}
             <div className="space-y-3">
                 <Label htmlFor="roleKeywords">Role Keywords (comma-separated)</Label>
                 <Input 
@@ -181,8 +184,8 @@ const Settings = () => {
                 <p className="text-xs text-muted-foreground">Jobs below this score will be hidden when "Show Only Matches" is enabled.</p>
             </div>
 
-            <Button onClick={handleSave} className="w-full md:w-auto">
-                Save Preferences
+            <Button onClick={handleSave} className="w-full md:w-auto" disabled={isSaving}>
+                {isSaving ? "Preferences Saved!" : "Save Preferences"}
             </Button>
 
         </div>
