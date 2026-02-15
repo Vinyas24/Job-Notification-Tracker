@@ -43,7 +43,7 @@ const Home = () => {
         </p>
         <button
           className="kodnest-btn kodnest-btn-primary"
-          onClick={() => navigate('/settings')}
+          onClick={() => navigate('/dashboard')}
           style={{ fontSize: '16px', padding: '16px 40px' }}
           data-testid="start-tracking-btn"
         >
