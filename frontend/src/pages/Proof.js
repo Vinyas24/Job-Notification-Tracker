@@ -37,6 +37,45 @@ const Proof = () => {
     }
   };
 
+  const validateDomainSpecific = (field, url) => {
+    if (!url) return { valid: true, error: '' };
+    
+    if (!validateURL(url)) {
+      return { valid: false, error: 'Please enter a valid URL (must start with http:// or https://)' };
+    }
+
+    try {
+      const urlObj = new URL(url);
+      const hostname = urlObj.hostname.toLowerCase();
+
+      switch(field) {
+        case 'lovable':
+          if (!hostname.includes('lovable.dev') && !hostname.includes('lovable.ai')) {
+            return { valid: false, error: 'Please enter a valid Lovable project URL (e.g., https://lovable.dev/projects/...)' };
+          }
+          break;
+        case 'github':
+          if (!hostname.includes('github.com')) {
+            return { valid: false, error: 'Please enter a valid GitHub repository URL (e.g., https://github.com/username/repo)' };
+          }
+          break;
+        case 'deployed':
+          const validHosts = ['vercel.app', 'netlify.app', 'herokuapp.com', 'render.com', 'railway.app', 'fly.dev', 'pages.dev'];
+          const isValidHost = validHosts.some(host => hostname.includes(host));
+          if (!isValidHost && !hostname.includes('localhost')) {
+            return { valid: false, error: 'Please enter a valid deployment URL (Vercel, Netlify, Heroku, Render, Railway, Fly.io, or Cloudflare Pages)' };
+          }
+          break;
+        default:
+          break;
+      }
+      
+      return { valid: true, error: '' };
+    } catch {
+      return { valid: false, error: 'Invalid URL format' };
+    }
+  };
+
   const handleInputChange = (field, value) => {
     setLinks(prev => ({ ...prev, [field]: value }));
     
@@ -48,8 +87,10 @@ const Proof = () => {
 
   const handleInputBlur = (field) => {
     const value = links[field];
-    if (value && !validateURL(value)) {
-      setErrors(prev => ({ ...prev, [field]: 'Please enter a valid URL (must start with http:// or https://)' }));
+    const validation = validateDomainSpecific(field, value);
+    
+    if (!validation.valid) {
+      setErrors(prev => ({ ...prev, [field]: validation.error }));
     } else {
       // Save to localStorage if valid
       const updated = { ...links };
