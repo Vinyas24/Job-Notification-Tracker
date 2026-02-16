@@ -126,7 +126,7 @@ const Dashboard = () => {
       });
       
       return result;
-  }, [jobsWithScores, filters, showMatchesOnly, preferences]);
+  }, [jobsWithScores, filters, showMatchesOnly, preferences, jobStatuses]);
 
   return (
     <div className="kodnest-container">
