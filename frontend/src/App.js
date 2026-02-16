@@ -7,6 +7,8 @@ import Saved from './pages/Saved';
 import Digest from './pages/Digest';
 import Settings from './pages/Settings';
 import Proof from './pages/Proof';
+import TestChecklist from './pages/TestChecklist';
+import Ship from './pages/Ship';
 import NotFound from './pages/NotFound';
 import { Toaster } from "@/components/ui/sonner";
 
@@ -23,6 +25,8 @@ function App() {
           <Route path="/digest" element={<Digest />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/proof" element={<Proof />} />
+          <Route path="/jt/07-test" element={<TestChecklist />} />
+          <Route path="/jt/08-ship" element={<Ship />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
