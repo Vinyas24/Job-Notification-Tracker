@@ -16,12 +16,43 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MapPin, Briefcase, Clock, Building2, Banknote, Star } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MapPin, Briefcase, Clock, Building2, Banknote, Star, ChevronDown, CheckCircle2, XCircle, Clock4, Send } from 'lucide-react';
 import { getScoreColor } from '../utils/scoring';
 
-const JobCard = ({ job, onSave, isSaved, matchScore }) => {
+const JobCard = ({ job, onSave, isSaved, matchScore, status = "Not Applied", onStatusChange }) => {
+
+  const getStatusColor = (s) => {
+      switch (s) {
+          case 'Applied': return 'text-blue-600 border-blue-200 bg-blue-200';
+          case 'Rejected': return 'text-red-600 border-red-200 bg-red-200';
+          case 'Selected': return 'text-green-600 border-green-200 bg-green-200';
+          default: return 'text-slate-600 border-slate-200 bg-slate-200';
+      }
+  };
+
+  const getStatusIcon = (s) => {
+      switch (s) {
+          case 'Applied': return <Send className="w-3 h-3 mr-1" />;
+          case 'Rejected': return <XCircle className="w-3 h-3 mr-1" />;
+          case 'Selected': return <CheckCircle2 className="w-3 h-3 mr-1" />;
+          default: return <Clock4 className="w-3 h-3 mr-1" />;
+      }
+  };
+
+  const handleStatusSelect = (newStatus) => {
+      if (onStatusChange) {
+          onStatusChange(job.id, newStatus);
+      }
+  };
+
   return (
-    <Card className="hover:shadow-lg transition-all duration-300 border-border/50 bg-card relative overflow-hidden group">
+    <Card className={`hover:shadow-lg transition-all duration-300 bg-card relative overflow-hidden group border-2 ${status === 'Applied' ? 'border-blue-200' : status === 'Selected' ? 'border-green-200' : status === 'Rejected' ? 'border-red-200' : 'border-border/50'}`}>
       
       {/* Match Score Badge */}
       {typeof matchScore === 'number' && (
@@ -31,7 +62,7 @@ const JobCard = ({ job, onSave, isSaved, matchScore }) => {
       )}
 
       <CardHeader className="space-y-1">
-        <div className="flex justify-between items-start mr-16"> {/* Add margin right to avoid overlap with badge */}
+        <div className="flex justify-between items-start mr-16">
           <div className="space-y-1">
             <CardTitle className="text-xl font-semibold line-clamp-1" title={job.title}>
               {job.title}
@@ -41,11 +72,34 @@ const JobCard = ({ job, onSave, isSaved, matchScore }) => {
               <span className="font-medium">{job.company}</span>
             </div>
           </div>
-          {/* Badge moved to top right absolute */}
         </div>
       </CardHeader>
       
       <CardContent className="space-y-4">
+        {/* Status Bar */}
+        <div className="flex items-center justify-between">
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className={`h-7 text-xs font-medium border ${getStatusColor(status)} hover:bg-transparent`}>
+                        {getStatusIcon(status)}
+                        {status}
+                        <ChevronDown className="w-3 h-3 ml-1 opacity-50" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                    <DropdownMenuItem onClick={() => handleStatusSelect('Not Applied')}>Not Applied</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleStatusSelect('Applied')}>Applied</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleStatusSelect('Rejected')}>Rejected</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleStatusSelect('Selected')}>Selected</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <span className="text-xs text-muted-foreground flex items-center">
+                <Clock className="w-3 h-3 mr-1" />
+                {job.postedDaysAgo === 0 ? "Today" : `${job.postedDaysAgo}d ago`}
+            </span>
+        </div>
+
         <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
           <Badge variant="outline" className="font-normal text-muted-foreground bg-transparent hover:bg-transparent">
              {job.source}
@@ -62,11 +116,6 @@ const JobCard = ({ job, onSave, isSaved, matchScore }) => {
             <Banknote className="w-3.5 h-3.5 mr-1" />
             {job.salaryRange}
           </div>
-        </div>
-        
-        <div className="text-xs text-muted-foreground flex items-center mt-2">
-            <Clock className="w-3.5 h-3.5 mr-1" />
-            Posted {job.postedDaysAgo === 0 ? "Today" : `${job.postedDaysAgo} days ago`}
         </div>
       </CardContent>
 
@@ -91,6 +140,10 @@ const JobCard = ({ job, onSave, isSaved, matchScore }) => {
                 <span className="font-medium text-foreground">{job.company}</span>
                 <span className="flex items-center gap-2">
                     {job.location} • {job.mode} • {job.salaryRange}
+                </span>
+                <span className={`inline-flex items-center mt-2 w-fit px-2 py-1 rounded text-xs font-medium border ${getStatusColor(status)}`}>
+                    {getStatusIcon(status)}
+                    Status: {status}
                 </span>
               </DialogDescription>
             </DialogHeader>

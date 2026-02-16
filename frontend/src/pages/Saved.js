@@ -7,11 +7,25 @@ import { toast } from 'sonner';
 const Saved = () => {
   const navigate = useNavigate();
   const [savedJobIds, setSavedJobIds] = useState([]);
+  const [jobStatuses, setJobStatuses] = useState({});
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
     setSavedJobIds(saved);
+    
+    const statuses = JSON.parse(localStorage.getItem('jobTrackerStatus') || '{}');
+    setJobStatuses(statuses);
   }, []);
+
+  const handleStatusChange = (jobId, newStatus) => {
+    const updatedStatuses = { 
+        ...jobStatuses, 
+        [jobId]: { status: newStatus, date: new Date().toISOString() } 
+    };
+    setJobStatuses(updatedStatuses);
+    localStorage.setItem('jobTrackerStatus', JSON.stringify(updatedStatuses));
+    toast.success(`Status updated to: ${newStatus}`);
+  };
 
   const handleSave = (jobId) => {
     // In Saved page, clicking save (which will be un-save) should remove it
@@ -47,6 +61,8 @@ const Saved = () => {
                 job={job} 
                 onSave={handleSave} 
                 isSaved={true} 
+                status={jobStatuses[job.id]?.status || 'Not Applied'}
+                onStatusChange={handleStatusChange}
               />
             ))}
           </div>

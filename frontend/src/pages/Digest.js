@@ -11,6 +11,7 @@ const Digest = () => {
     const navigate = useNavigate();
     const [digestJobs, setDigestJobs] = useState(null);
     const [preferences, setPreferences] = useState(null);
+    const [statusUpdates, setStatusUpdates] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const todayStr = new Date().toISOString().split('T')[0];
@@ -25,6 +26,24 @@ const Digest = () => {
         if (existingDigest) {
             setDigestJobs(JSON.parse(existingDigest));
         }
+
+        // Load recent status updates
+        const allStatuses = JSON.parse(localStorage.getItem('jobTrackerStatus') || '{}');
+        console.log("Digest: Loaded statuses from LS:", allStatuses);
+
+        const updates = Object.entries(allStatuses)
+            .map(([id, data]) => {
+                // Fix: IDs in jobs.js are strings (e.g., "j1"), so do NOT use parseInt
+                const job = jobs.find(j => j.id === id);
+                if (!job) console.warn(`Digest: Job not found for ID ${id}`);
+                return job ? { ...job, ...data } : null;
+            })
+            .filter(item => item !== null)
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, 5); // Status Top 5
+            
+        console.log("Digest: Computed updates:", updates);
+        setStatusUpdates(updates);
         
         setLoading(false);
     }, [digestKey]);
@@ -118,10 +137,14 @@ const Digest = () => {
 
   return (
     <div className="kodnest-container bg-slate-100 min-h-screen">
-      <div className="kodnest-workspace" style={{ maxWidth: '700px', margin: '0 auto', padding: '40px 20px', flexDirection: 'column' }}>
+      <div className="kodnest-workspace" style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px', flexDirection: 'column' }}>
         
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-start">
+        
+        {/* Main Content - Daily Briefing */}
+        <div className={`${statusUpdates.length > 0 ? 'lg:col-span-8' : 'lg:col-span-8 lg:col-start-3'}`}>
         {!digestJobs ? (
-            <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-border/50">
+            <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-border/50 h-full flex flex-col justify-center items-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 mb-6 text-blue-600">
                     <Sparkles className="w-8 h-8" />
                 </div>
@@ -191,6 +214,41 @@ const Digest = () => {
                 </div>
             </div>
         )}
+        </div>
+        
+        {/* Status Updates Sidebar */}
+        {statusUpdates.length > 0 && (
+            <div className="lg:col-span-4">
+             <div className="bg-white rounded-xl shadow-lg border border-border/50 overflow-hidden sticky top-8">
+                <div className="bg-slate-50 border-b p-4">
+                    <h2 className="text-lg font-serif font-bold text-slate-900">Recent Updates</h2>
+                </div>
+                <div className="divide-y max-h-[600px] overflow-y-auto">
+                    {statusUpdates.map((update, idx) => (
+                        <div key={idx} className="p-3 hover:bg-slate-50 transition-colors">
+                            <div className="flex justify-between items-start gap-2 mb-2">
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="font-semibold text-sm text-slate-800 truncate">{update.title}</h4>
+                                    <span className="text-xs text-muted-foreground">{update.company}</span>
+                                </div>
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wide whitespace-nowrap ${update.status === 'Applied' ? 'text-blue-700 bg-blue-50 border-blue-200' : update.status === 'Selected' ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : update.status === 'Rejected' ? 'text-red-700 bg-red-50 border-red-200' : 'text-slate-600 bg-slate-50 border-slate-200'}`}>
+                                    {update.status}
+                                </span>
+                            </div>
+                            <div className="text-[10px] text-slate-400">
+                                {new Date(update.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="p-3 bg-slate-50/50 text-center border-t">
+                    <button onClick={() => navigate('/dashboard')} className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline">View All Applications →</button>
+                </div>
+             </div>
+            </div>
+        )}
+        
+        </div>
       </div>
     </div>
   );

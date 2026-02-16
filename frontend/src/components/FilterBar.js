@@ -82,6 +82,19 @@ const FilterBar = ({ filters, setFilters }) => {
             </SelectContent>
         </Select>
 
+        <Select value={filters.status} onValueChange={(val) => handleChange('status', val)}>
+            <SelectTrigger>
+                <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="All">All Statuses</SelectItem>
+                <SelectItem value="Not Applied">Not Applied</SelectItem>
+                <SelectItem value="Applied">Applied</SelectItem>
+                <SelectItem value="Rejected">Rejected</SelectItem>
+                <SelectItem value="Selected">Selected</SelectItem>
+            </SelectContent>
+        </Select>
+
         <Select value={filters.sort} onValueChange={(val) => handleChange('sort', val)}>
           <SelectTrigger>
             <SelectValue placeholder="Sort By" />

@@ -12,6 +12,7 @@ import { Settings } from 'lucide-react';
 
 const Dashboard = () => {
   const [savedJobIds, setSavedJobIds] = useState([]);
+  const [jobStatuses, setJobStatuses] = useState({});
   const [preferences, setPreferences] = useState(null);
   const [showMatchesOnly, setShowMatchesOnly] = useState(false);
   const [filters, setFilters] = useState({
@@ -20,6 +21,7 @@ const Dashboard = () => {
     mode: '',
     experience: '',
     source: '',
+    status: '',
     sort: 'latest' // latest, matchScore, oldest, salary
   });
 
@@ -27,9 +29,22 @@ const Dashboard = () => {
     const saved = JSON.parse(localStorage.getItem('savedJobs') || '[]');
     setSavedJobIds(saved);
     
+    const statuses = JSON.parse(localStorage.getItem('jobTrackerStatus') || '{}');
+    setJobStatuses(statuses);
+
     const prefs = JSON.parse(localStorage.getItem('jobTrackerPreferences'));
     setPreferences(prefs);
   }, []);
+  
+  const handleStatusChange = (jobId, newStatus) => {
+      const updatedStatuses = { 
+          ...jobStatuses, 
+          [jobId]: { status: newStatus, date: new Date().toISOString() } 
+      };
+      setJobStatuses(updatedStatuses);
+      localStorage.setItem('jobTrackerStatus', JSON.stringify(updatedStatuses));
+      toast.success(`Status updated to: ${newStatus}`);
+  };
 
   const handleSave = (jobId) => {
     let newSaved;
@@ -73,10 +88,14 @@ const Dashboard = () => {
 
         const sourceMatch = !filters.source || filters.source === 'All' || job.source === filters.source;
         
+        // Status Filter
+        const currentStatus = jobStatuses[job.id]?.status || 'Not Applied';
+        const statusMatch = !filters.status || filters.status === 'All' || currentStatus === filters.status;
+
         // Match Score Filter
         const scoreMatch = !showMatchesOnly || !preferences || job.matchScore >= (preferences.minMatchScore || 40);
 
-        return searchMatch && locationMatch && modeMatch && experienceMatch && sourceMatch && scoreMatch;
+        return searchMatch && locationMatch && modeMatch && experienceMatch && sourceMatch && statusMatch && scoreMatch;
       });
 
       // Sorting
@@ -161,6 +180,8 @@ const Dashboard = () => {
                 onSave={handleSave} 
                 isSaved={savedJobIds.includes(job.id)} 
                 matchScore={preferences ? job.matchScore : undefined}
+                status={jobStatuses[job.id]?.status || 'Not Applied'}
+                onStatusChange={handleStatusChange}
               />
             ))
           ) : (
